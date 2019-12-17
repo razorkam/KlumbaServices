@@ -1,0 +1,1 @@
+BITRIX_SERVICE_COMPUTE_DISTRICT = 'compute_district'
