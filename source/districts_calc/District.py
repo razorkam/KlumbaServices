@@ -1,5 +1,3 @@
-
-
 class District:
     def __init__(self, p_data, p_name):
         self.data = p_data # Polygon representation

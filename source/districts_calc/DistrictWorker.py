@@ -1,11 +1,12 @@
 import json
 import re
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Polygon
 import logging
-from . import MiscConstants
-from .District import District
-from .BitrixWorker import BitrixWorker
+from source.districts_calc import MiscConstants
+from source.districts_calc.District import District
+from source.districts_calc.DCBitrixWorker import DCBitrixWorker
 
+log = logging.getLogger(__name__)
 BITRIX_ADDRESS_PATTERN = re.compile('(.+)\\|(\\d+\\.\\d+);(\\d+\\.\\d+)') #address|lat;lon
 
 class DistrictWorker:
@@ -39,7 +40,7 @@ class DistrictWorker:
 
                     DistrictWorker.districts_polygons.append(district)
 
-            field_data = BitrixWorker.get_district_field_data()
+            field_data = DCBitrixWorker.get_district_field_data()
 
             if not field_data:
                 raise Exception('Bitrix district fields cannot be obtained')
@@ -50,7 +51,7 @@ class DistrictWorker:
                 DistrictWorker.districts_field_data[name] = code
 
         except Exception as e:
-            logging.error("Parsing districts geodata error %s", e)
+            log.error("Parsing districts geodata error %s", e)
 
     @staticmethod
     def get_district_name(address_point):
@@ -73,7 +74,7 @@ class DistrictWorker:
 
             return lat, lon
         else:
-            logging.error('Location cannot be parsed with address regex {}'.format(address_str))
+            log.error('Location cannot be parsed with address regex {}'.format(address_str))
             return None, None
 
 

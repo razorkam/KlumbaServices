@@ -3,21 +3,21 @@ from urllib import parse
 import logging
 from shapely.geometry import Point
 
-from .BitrixFieldsAliases import *
-from . import BitrixFieldMappings
-from .BitrixWorker import BitrixWorker
-from .DistrictWorker import DistrictWorker
-from .BitrixFieldMappings import *
-from . import creds
+from source.districts_calc.DCBitrixWorker import *
+from source.districts_calc.DistrictWorker import DistrictWorker
+from source.districts_calc.BitrixFieldMappings import *
+from source import creds
+
+log = logging.getLogger(__name__)
 
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         try:
-            logging.info("New POST request accepted!")
+            log.info("New POST request accepted!")
             query = parse.urlparse(self.path).query
             query_components = parse.parse_qs(query, keep_blank_values=True)
-            logging.info("Accepted query components: %s", query_components)
+            log.info("Accepted query components: %s", query_components)
 
             if WEBHOOK_SECRET_ALIAS in query_components \
                     and query_components[WEBHOOK_SECRET_ALIAS][0] == creds.BITRIX_WEBHOOK_SECRET:
@@ -40,12 +40,12 @@ class RequestHandler(BaseHTTPRequestHandler):
                     if district_name:
                         district_code = DistrictWorker.get_district_code(district_name)
                         if district_code:
-                            result = BitrixWorker.set_district(deal_id, district_code)
+                            result = DCBitrixWorker.set_district(deal_id, district_code)
 
                             if result:
-                                logging.info("Deal id {} district was updated successfully!".format(deal_id))
+                                log.info("Deal id {} district was updated successfully!".format(deal_id))
                             else:
-                                logging.info("Deal id {} district was not updated: bitrix updating error"
+                                log.info("Deal id {} district was not updated: bitrix updating error"
                                              .format(deal_id))
                         else:
                             raise Exception('District code was not found by name {}'.format(district_name))
@@ -60,5 +60,5 @@ class RequestHandler(BaseHTTPRequestHandler):
                 raise Exception('Secret hasnt passed or incorrect')
 
         except Exception as e:
-            logging.error('HTTP request handling error: %s', e)
+            log.error('HTTP request handling error: %s', e)
 
