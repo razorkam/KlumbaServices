@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-pip install Shapely
+pip3 install Shapely
 
 systemctl stop klumba_services
 rm -f  /etc/systemd/system/klumba_services.service
