@@ -1,4 +1,6 @@
 import logging
+import ssl
+
 from source.HTTPServer import ThreadedHTTPServer
 from source.districts_calc.MiscConstants import *
 from source.districts_calc.HTTPRequestHandler import RequestHandler
@@ -12,6 +14,9 @@ class DistrictCalc:
     def http_serve():
         try:
             deals_update_server = ThreadedHTTPServer((HTTP_SERVER_ADDRESS, HTTP_SERVER_PORT), RequestHandler)
+            deals_update_server.socket = ssl.wrap_socket(deals_update_server.socket,
+                                                         keyfile=CERTKEY_PATH, certfile=CERT_PATH,
+                                                         server_side=True)
 
             while True:
                 try:
