@@ -1,15 +1,19 @@
 import logging
 import ssl
+import time
 
 from source.HTTPServer import ThreadedHTTPServer
 from source.districts_calc.MiscConstants import *
 from source.districts_calc.HTTPRequestHandler import RequestHandler
 from source.districts_calc.DistrictWorker import DistrictWorker
+from source.RunnableService import RunnableService
 
 log = logging.getLogger(__name__)
 
 
-class DistrictCalc:
+class DistrictCalc(RunnableService):
+    GLOBAL_ERROR_TIMEOUT = 60
+
     @staticmethod
     def http_serve():
         try:
@@ -26,8 +30,14 @@ class DistrictCalc:
 
         except Exception as e:
             log.error("HTTP server init exception: ", e)
+            time.sleep(DistrictCalc.GLOBAL_ERROR_TIMEOUT)
 
     @staticmethod
     def run():
-        DistrictWorker.parse_districts_data()
-        DistrictCalc.http_serve()
+        while True:
+            try:
+                DistrictWorker.parse_districts_data()
+                DistrictCalc.http_serve()
+            except Exception as e:
+                log.critical('Error running DistrictsCalc service: %s', e)
+                time.sleep(DistrictCalc.GLOBAL_ERROR_TIMEOUT)

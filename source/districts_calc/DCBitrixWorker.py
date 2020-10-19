@@ -1,5 +1,5 @@
 from source.BitrixWorker import BitrixWorker
-from source.districts_calc.BitrixFieldsAliases import *
+from source.districts_calc.BitrixFieldAliases import *
 
 
 class DCBitrixWorker(BitrixWorker):

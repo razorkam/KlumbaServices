@@ -1,6 +1,7 @@
 import requests
-from . import creds
+from source import creds
 import logging
+import time
 
 log = logging.getLogger(__name__)
 
@@ -9,6 +10,7 @@ class BitrixWorker:
     SESSION = requests.session()
     REQUESTS_TIMEOUT = 10
     REQUESTS_MAX_ATTEMPTS = 3
+    REQUEST_ATTEMPT_TIMEOUT = 3
 
     @staticmethod
     def _send_request(method, params=None, custom_error_text=''):
@@ -37,5 +39,7 @@ class BitrixWorker:
             except Exception as e:
                 error = 'Sending Bitrix api request %s' % e
                 log.error(error)
+
+            time.sleep(BitrixWorker.REQUEST_ATTEMPT_TIMEOUT)
 
         return None
