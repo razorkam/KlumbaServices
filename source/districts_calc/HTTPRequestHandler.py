@@ -15,9 +15,14 @@ logger = logging.getLogger(__name__)
 class RequestHandler(BaseHTTPRequestHandler):
     def send_json(self, source_dict):
         self.send_response(200)
+        # WARNING: CORS restrictions disabled
         self.send_header('Content-type', 'application/json')
         self.end_headers()
         self.wfile.write(json.dumps(source_dict).encode())
+
+    def end_headers(self):
+        self.send_header("Access-Control-Allow-Origin", "*")
+        BaseHTTPRequestHandler.end_headers(self)
 
     def do_GET(self):
         try:
