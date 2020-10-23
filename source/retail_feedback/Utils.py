@@ -9,6 +9,8 @@ PHONE_INVALID_CHARS_PATTERN = re.compile('[^+\d]')
 NUMERIC_INVALID_CHARS_PATTERN = re.compile('[^.\d]')
 ID_VALID_PATTERN = re.compile('^\d+$')
 MIN_VALID_DATETIME = datetime.datetime.strptime('01.01.1901 00:00:00 +0300', '%d.%m.%Y %H:%M:%S %z')
+SOURCE_DECIMAL_DELIM = ','
+TARGET_DECIMAL_DELIM = '.'
 
 def prepare_phone(phone):
     if not phone:
@@ -32,10 +34,12 @@ def prepare_date(date):
 
 def prepare_numeric(val):
     try:
-        return re.sub(NUMERIC_INVALID_CHARS_PATTERN, '', val)
+        delimeter_replaced = val.replace(SOURCE_DECIMAL_DELIM, TARGET_DECIMAL_DELIM)
+        result = re.sub(NUMERIC_INVALID_CHARS_PATTERN, '', delimeter_replaced)
+        return float(result)
     except Exception as e:
         logger.error('Preparing numeric: %s', e)
-        return False
+        return None
 
 def is_numeric(val):
     try:
