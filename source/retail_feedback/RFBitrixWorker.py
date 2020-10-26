@@ -83,7 +83,7 @@ class RFBitrixWorker(BitrixWorker):
             contact_id = None
 
             if response:
-                    contact_id = response[0][CONTACT_ID_ALIAS]
+                contact_id = response[0][CONTACT_ID_ALIAS]
             else:
                 create_params = {
                     CONTACT_PHONE_ALIAS: [{
@@ -95,9 +95,10 @@ class RFBitrixWorker(BitrixWorker):
                     CONTACT_LAST_NAME_ALIAS: lastname,
                     CONTACT_TYPE_ALIAS: CONTACT_DEFAULT_TYPE,
                     CONTACT_BIRTHDAY_ALIAS: Utils.prepare_date(birthdate),
-                    CONTACT_SEX_ALIAS: Utils.map_sex_to_list_elt_id(sex)
+                    CONTACT_SEX_ALIAS: Utils.map_sex_to_list_elt_id(sex),
+                    CONTACT_SOURCE_ALIAS: DEFAULT_SOURCE,
+                    UTM_SOURCE_MARK_ALIAS: UTM_SOURCE_MARK_DEFAULT
                 }
-
 
                 create_response = BitrixWorker._send_request('crm.contact.add',
                                                              {'fields': create_params})

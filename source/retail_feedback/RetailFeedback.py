@@ -84,7 +84,9 @@ class RetailFeedback(RunnableService):
                             DEAL_SUM_ALIAS: Utils.prepare_numeric(deal_sum),
                             DEAL_DATE_ALIAS: Utils.prepare_date(date),
                             DEAL_CATEGORY_ALIAS: DEAL_DEFAULT_CATEGORY_ID,
-                            DEAL_SOURCE_ALIAS: DEAL_DEFAULT_SOURCE
+                            DEAL_SOURCE_ALIAS: DEFAULT_SOURCE,
+                            DEAL_DELIVERY_TYPE_ALIAS: DEAL_DEFAULT_DELIVERY_TYPE,
+                            UTM_SOURCE_MARK_ALIAS: UTM_SOURCE_MARK_DEFAULT
                         }
 
                         result = RFBitrixWorker.add_deal(deal_add_params)
